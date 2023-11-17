@@ -78,6 +78,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
   final Widget? Function(BuildContext context, DayValues values)? dayBuilder;
 
   final bool Function(DateTime day)? isHoliday;
+  final bool Function(DateTime day)? isSelectable;
 
   /// The controller of ScrollableCleanCalendar
   final CleanCalendarController calendarController;
@@ -96,6 +97,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.weekdayBuilder,
     this.dayBuilder,
     this.isHoliday,
+    this.isSelectable,
     this.monthTextAlign,
     this.monthTextStyle,
     this.weekdayTextStyle,
@@ -229,6 +231,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   layout: widget.layout,
                   dayBuilder: widget.dayBuilder,
                   isHoliday: widget.isHoliday,
+                  isSelectable: widget.isSelectable,
                   backgroundColor: widget.dayBackgroundColor,
                   selectedBackgroundColor: widget.daySelectedBackgroundColor,
                   selectedBackgroundColorBetween:

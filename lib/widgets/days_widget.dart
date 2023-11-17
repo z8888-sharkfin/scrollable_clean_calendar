@@ -15,6 +15,7 @@ class DaysWidget extends StatelessWidget {
     DayValues values,
   )? dayBuilder;
   final bool Function(DateTime date)? isHoliday;
+  final bool Function(DateTime date)? isSelectable;
   final Color? selectedBackgroundColor;
   final Color? backgroundColor;
   final Color? selectedBackgroundColorBetween;
@@ -32,6 +33,7 @@ class DaysWidget extends StatelessWidget {
     required this.layout,
     required this.dayBuilder,
     required this.isHoliday,
+    required this.isSelectable,
     required this.selectedBackgroundColor,
     required this.backgroundColor,
     required this.selectedBackgroundColorBetween,
@@ -116,7 +118,7 @@ class DaysWidget extends StatelessWidget {
 
         return GestureDetector(
           onTap: () {
-            if (isHoliday != null && isHoliday!(day)) {
+            if (isSelectable != null && !isSelectable!(day)) {
               return;
             }
             if (day.isBefore(cleanCalendarController.minDate) &&
@@ -151,11 +153,21 @@ class DaysWidget extends StatelessWidget {
           : Theme.of(context).colorScheme.onSurface,
     );
 
+    bool isSelected = values.isSelected;
     bool _isHoliday = false;
+    bool _isSelectable = true;
     if (isHoliday != null) {
-      _isHoliday = isHoliday!(values.day);
+      if (isHoliday!(values.day)) {
+        isSelected = false;
+        _isHoliday = true;
+      }
     }
-    bool isSelected = !_isHoliday && values.isSelected;
+    if (isSelectable != null) {
+      if (!isSelectable!(values.day)) {
+        isSelected = false;
+        _isSelectable = false;
+      }
+    }
     if (isSelected) {
       if ((values.selectedMinDate != null &&
               values.day.isSameDay(values.selectedMinDate!)) ||
@@ -191,7 +203,7 @@ class DaysWidget extends StatelessWidget {
         color: selectedBackgroundColor ?? Theme.of(context).colorScheme.primary,
       );
     } else if (values.day.isBefore(values.minDate) ||
-        values.day.isAfter(values.maxDate) || _isHoliday) {
+        values.day.isAfter(values.maxDate) || !_isSelectable) {
       bgColor = disableBackgroundColor ??
           Theme.of(context).colorScheme.surface.withOpacity(.4);
       txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
@@ -204,7 +216,7 @@ class DaysWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: bgColor,
+        color: _isHoliday? Colors.deepPurple : bgColor,
         borderRadius: BorderRadius.circular(radius),
         border: values.day.isSameDay(values.minDate)
             ? Border.all(
@@ -214,7 +226,22 @@ class DaysWidget extends StatelessWidget {
               )
             : null,
       ),
-      child: Text(
+      child: _isHoliday? Stack(
+        children: [
+          Center(
+            child: Text(
+              values.text,
+              textAlign: TextAlign.center,
+              style: txtStyle,
+            ),
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            padding: const EdgeInsets.only(top: 1.4, right: 1.4),
+            child: Icon(Icons.flag_outlined, size: 11, color: Colors.redAccent,),
+          ),
+        ],
+      ) : Text(
         values.text,
         textAlign: TextAlign.center,
         style: txtStyle,
