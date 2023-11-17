@@ -75,7 +75,9 @@ class ScrollableCleanCalendar extends StatefulWidget {
   final Widget Function(BuildContext context, String weekday)? weekdayBuilder;
 
   /// A builder to make a customized day of calendar
-  final Widget Function(BuildContext context, DayValues values)? dayBuilder;
+  final Widget? Function(BuildContext context, DayValues values)? dayBuilder;
+
+  final bool Function(DateTime day)? isHoliday;
 
   /// The controller of ScrollableCleanCalendar
   final CleanCalendarController calendarController;
@@ -88,11 +90,12 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.calendarCrossAxisSpacing = 4,
     this.calendarMainAxisSpacing = 4,
     this.spaceBetweenCalendars = 24,
-    this.spaceBetweenMonthAndCalendar = 24,
+    this.spaceBetweenMonthAndCalendar = 14,
     this.padding,
     this.monthBuilder,
     this.weekdayBuilder,
     this.dayBuilder,
+    this.isHoliday,
     this.monthTextAlign,
     this.monthTextStyle,
     this.weekdayTextStyle,
@@ -129,11 +132,23 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.scrollController != null) {
-      return listViewCalendar();
-    } else {
-      return scrollablePositionedListCalendar();
+    List<Widget> children = [];
+    for (int i = 0; i< widget.calendarController.months.length; i++) {
+      children.add(
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(top: 24, left: 16, right: 16),
+          child: childCollumn(
+              widget.calendarController.months[i],
+              lastMonth: i == widget.calendarController.months.length-1),
+        ),
+      );
     }
+    return ListView(
+      // This next line does the trick.
+      scrollDirection: Axis.horizontal,
+      children: children,
+    );
   }
 
   Widget listViewCalendar() {
@@ -168,20 +183,29 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
     );
   }
 
-  Widget childCollumn(DateTime month) {
+  Widget childCollumn(DateTime month, {bool lastMonth = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: double.maxFinite,
-          child: MonthWidget(
-            month: month,
-            locale: widget.locale,
-            layout: widget.layout,
-            monthBuilder: widget.monthBuilder,
-            textAlign: widget.monthTextAlign,
-            textStyle: widget.monthTextStyle,
-          ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Center(
+              child: MonthWidget(
+                month: month,
+                locale: widget.locale,
+                layout: widget.layout,
+                monthBuilder: widget.monthBuilder,
+                textAlign: widget.monthTextAlign,
+                textStyle: widget.monthTextStyle,
+              ),
+            ),
+            if (!lastMonth)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.navigate_next, size: 20, color: Colors.grey.withOpacity(0.4),),
+              ),
+          ],
         ),
         SizedBox(height: widget.spaceBetweenMonthAndCalendar),
         Column(
@@ -204,6 +228,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   calendarMainAxisSpacing: widget.calendarMainAxisSpacing,
                   layout: widget.layout,
                   dayBuilder: widget.dayBuilder,
+                  isHoliday: widget.isHoliday,
                   backgroundColor: widget.dayBackgroundColor,
                   selectedBackgroundColor: widget.daySelectedBackgroundColor,
                   selectedBackgroundColorBetween:
@@ -216,7 +241,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
               },
             )
           ],
-        )
+        ),
       ],
     );
   }
