@@ -213,6 +213,14 @@ class DaysWidget extends StatelessWidget {
       );
     }
 
+    if (!isSelected) {
+      if (_isHoliday) {
+        bgColor = Colors.purpleAccent.withOpacity(0.6);
+      } else if (values.day.weekday == DateTime.saturday || values.day.weekday == DateTime.sunday) {
+        bgColor = Colors.greenAccent.withOpacity(0.1);
+      }
+    }
+
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
