@@ -20,6 +20,7 @@ class DaysWidget extends StatelessWidget {
   final Color? backgroundColor;
   final Color? selectedBackgroundColorBetween;
   final Color? disableBackgroundColor;
+  final Color? dayWeekendBackgroundColor;
   final Color? dayDisableColor;
   final double radius;
   final TextStyle? textStyle;
@@ -38,6 +39,7 @@ class DaysWidget extends StatelessWidget {
     required this.backgroundColor,
     required this.selectedBackgroundColorBetween,
     required this.disableBackgroundColor,
+    required this.dayWeekendBackgroundColor,
     required this.dayDisableColor,
     required this.radius,
     required this.textStyle,
@@ -217,7 +219,7 @@ class DaysWidget extends StatelessWidget {
       if (_isHoliday) {
         bgColor = Colors.purpleAccent.withOpacity(0.6);
       } else if (values.day.weekday == DateTime.saturday || values.day.weekday == DateTime.sunday) {
-        bgColor = Colors.greenAccent.withOpacity(0.1);
+        bgColor = dayWeekendBackgroundColor?? Colors.greenAccent.withOpacity(0.1);
       }
     }
 

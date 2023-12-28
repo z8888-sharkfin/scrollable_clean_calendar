@@ -23,6 +23,8 @@ class ScrollableCleanCalendar extends StatefulWidget {
   /// What layout (design) is going to be used
   final Layout? layout;
 
+  final Axis? scrollDirection;
+
   /// The space between month and calendar
   final double spaceBetweenMonthAndCalendar;
 
@@ -61,6 +63,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
 
   /// The day disable background color
   final Color? dayDisableBackgroundColor;
+  final Color? dayWeekendBackgroundColor;
 
   /// The day disable color
   final Color? dayDisableColor;
@@ -88,6 +91,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.scrollController,
     this.showWeekdays = true,
     this.layout,
+    this.scrollDirection,
     this.calendarCrossAxisSpacing = 4,
     this.calendarMainAxisSpacing = 4,
     this.spaceBetweenCalendars = 24,
@@ -105,6 +109,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.dayBackgroundColor,
     this.daySelectedBackgroundColorBetween,
     this.dayDisableBackgroundColor,
+    this.dayWeekendBackgroundColor,
     this.dayDisableColor,
     this.dayTextStyle,
     this.dayRadius = 6,
@@ -148,7 +153,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
     }
     return ListView(
       // This next line does the trick.
-      scrollDirection: Axis.horizontal,
+      scrollDirection: widget.scrollDirection?? Axis.horizontal,
       children: children,
     );
   }
@@ -237,6 +242,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   selectedBackgroundColorBetween:
                       widget.daySelectedBackgroundColorBetween,
                   disableBackgroundColor: widget.dayDisableBackgroundColor,
+                  dayWeekendBackgroundColor: widget.dayWeekendBackgroundColor,
                   dayDisableColor: widget.dayDisableColor,
                   radius: widget.dayRadius,
                   textStyle: widget.dayTextStyle,
