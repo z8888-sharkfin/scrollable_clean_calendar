@@ -55,6 +55,8 @@ class ScrollableCleanCalendar extends StatefulWidget {
   /// The day selected background color
   final Color? daySelectedBackgroundColor;
 
+  final Color? holidayBackgroundColor;
+
   /// The day background color
   final Color? dayBackgroundColor;
 
@@ -106,6 +108,7 @@ class ScrollableCleanCalendar extends StatefulWidget {
     this.monthTextStyle,
     this.weekdayTextStyle,
     this.daySelectedBackgroundColor,
+    this.holidayBackgroundColor,
     this.dayBackgroundColor,
     this.daySelectedBackgroundColorBetween,
     this.dayDisableBackgroundColor,
@@ -239,6 +242,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
                   isSelectable: widget.isSelectable,
                   backgroundColor: widget.dayBackgroundColor,
                   selectedBackgroundColor: widget.daySelectedBackgroundColor,
+                  holidayBackgroundColor: widget.holidayBackgroundColor,
                   selectedBackgroundColorBetween:
                       widget.daySelectedBackgroundColorBetween,
                   disableBackgroundColor: widget.dayDisableBackgroundColor,

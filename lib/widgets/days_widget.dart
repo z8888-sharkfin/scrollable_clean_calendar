@@ -17,6 +17,7 @@ class DaysWidget extends StatelessWidget {
   final bool Function(DateTime date)? isHoliday;
   final bool Function(DateTime date)? isSelectable;
   final Color? selectedBackgroundColor;
+  final Color? holidayBackgroundColor;
   final Color? backgroundColor;
   final Color? selectedBackgroundColorBetween;
   final Color? disableBackgroundColor;
@@ -36,6 +37,7 @@ class DaysWidget extends StatelessWidget {
     required this.isHoliday,
     required this.isSelectable,
     required this.selectedBackgroundColor,
+    required this.holidayBackgroundColor,
     required this.backgroundColor,
     required this.selectedBackgroundColorBetween,
     required this.disableBackgroundColor,
@@ -217,7 +219,7 @@ class DaysWidget extends StatelessWidget {
 
     if (!isSelected) {
       if (_isHoliday) {
-        bgColor = Colors.purpleAccent.withOpacity(0.6);
+        bgColor = holidayBackgroundColor?? Colors.purpleAccent.withOpacity(0.88);
       } else if (values.day.weekday == DateTime.saturday || values.day.weekday == DateTime.sunday) {
         bgColor = dayWeekendBackgroundColor?? Colors.greenAccent.withOpacity(0.1);
       }
@@ -226,7 +228,7 @@ class DaysWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: _isHoliday? Colors.deepPurple : bgColor,
+        color: bgColor,
         borderRadius: BorderRadius.circular(radius),
         border: values.day.isSameDay(values.minDate)
             ? Border.all(
@@ -248,7 +250,7 @@ class DaysWidget extends StatelessWidget {
           Container(
             alignment: Alignment.topRight,
             padding: const EdgeInsets.only(top: 1.4, right: 1.4),
-            child: Icon(Icons.flag_outlined, size: 11, color: Colors.redAccent,),
+            child: Icon(Icons.star, size: 11, color: Colors.deepPurple,),
           ),
         ],
       ) : Text(
